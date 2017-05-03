@@ -2,6 +2,7 @@ module main;
 
 import infrastructure;
 import tlapi;
+import std.stdio : writeln;
 
 TrafficLight light1, light2;
 
@@ -20,7 +21,9 @@ void loop()
 
 int main(string[] args)
 {
+    writeln("Setup Routine:\n");
     setup();
+    writeln("\nLoop Once:\n");
     loop();
     return 0;
 }

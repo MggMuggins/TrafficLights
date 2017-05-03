@@ -4,9 +4,11 @@ import std.stdio : writefln;
 
 //D Infrastructure, to allow calls to arduino functions
 
+const int OUTPUT = 0, HIGH = 1, LOW = 0;
+
 void digitalWrite(int pin, int type)
 {
-    writefln("Pin %s turned %s.", pin, type);
+    writefln("Pin %s set to %s output level.", pin, type);
 }
 
 void delay(long time)
