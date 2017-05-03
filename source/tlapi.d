@@ -3,10 +3,15 @@ module tlapi;
 import infrastructure;
 
 //Portable code
+
+//Useable aliases for certain values
+const byte GREEN = 0, YELLOW = 1, RED = 2;
+const byte OFF = 0, ON = 1;
+
 class Led
 {
     public int pin;
-    private int state = 0;
+    private byte state = OFF;
     
     this(int pin)
     {
@@ -17,14 +22,20 @@ class Led
     
     public void turnOn()
     {
-      digitalWrite(pin, HIGH);
-      this.state = 1;
+        if (this.state == OFF)
+        {
+            digitalWrite(pin, HIGH);
+            this.state = ON;
+        }
     }
 
     public void turnOff()
     {
-      digitalWrite(pin, LOW);
-      this.state = 0;
+        if (this.state == ON)
+        {
+            digitalWrite(pin, LOW);
+            this.state = OFF;
+        }
     }
 }
 
@@ -32,7 +43,7 @@ class TrafficLight
 {
     private Led R, Y, G;
     //State is 0 for green, 1 for yellow, and 2 for red
-    private int state = 0;
+    private byte state = 0;
     
     this(int pinR, int pinY, int pinG)
     {
@@ -43,7 +54,7 @@ class TrafficLight
     
     public void changeState(long time)
     {
-        if (this.state == 0)
+        if (this.state == GREEN)
         {
             this.turnYellow();
             delay(time);
@@ -64,13 +75,13 @@ class TrafficLight
     {
         switch (state)
         {
-            case 0:
+            case GREEN:
                 this.turnGreen();
                 break;
-            case 1:
+            case YELLOW:
                 this.turnYellow();
                 break;
-            case 2:
+            case RED:
                 this.turnRed();
                 break;
             default:
@@ -82,34 +93,34 @@ class TrafficLight
     {
         this.turnOff();
         this.G.turnOn();
-        this.state = 0;
+        this.state = GREEN;
     }
     
     private void turnYellow()
     {
         this.turnOff();
         this.Y.turnOn();
-        this.state = 1;
+        this.state = YELLOW;
     }
     
     private void turnRed()
     {
         this.turnOff();
         this.R.turnOn();
-        this.state = 2;
+        this.state = RED;
     }
     
     private void turnOff()
     {
         switch (this.state)
         {
-            case 0:
+            case GREEN:
                 this.G.turnOff();
                 break;
-            case 1:
+            case YELLOW:
                 this.Y.turnOff();
                 break;
-            case 2:
+            case RED:
                 this.R.turnOff();
                 break;
             default:
