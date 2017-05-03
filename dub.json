@@ -1,0 +1,9 @@
+{
+	"name": "trafficlight",
+	"authors": [
+		"SamwiseFilmore"
+	],
+	"description": "Object-Oriented Traffic Light Controller",
+	"copyright": "Copyright © 2017, SamwiseFilmore",
+	"license": "none"
+}
