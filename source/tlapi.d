@@ -1,6 +1,7 @@
 module tlapi;
 
 import infrastructure;
+import renderer;
 
 //Portable code
 
@@ -8,7 +9,13 @@ import infrastructure;
 const byte GREEN = 0, YELLOW = 1, RED = 2;
 const byte OFF = 0, ON = 1;
 
-extern (C++) class Led
+interface Bulb
+{
+    public void turnOn();
+    public void turnOff();
+}
+
+class Led : Bulb
 {
     public int pin;
     private byte state = OFF;
@@ -39,10 +46,41 @@ extern (C++) class Led
     }
 }
 
-extern (C++) class TrafficLight
+class ConsoleLight : Bulb
+{
+    public string name;
+    public ushort color;
+    private byte state = OFF;
+    
+    this(string name)
+    {
+        this.name = name;
+        this.turnOff;
+    }
+    
+    public void turnOn()
+    {
+        drawLight(name, color);
+        this.state = ON;
+    }
+    
+    public void turnOff()
+    {
+        
+        this.state = OFF;
+    }
+    
+    public void setColor(ushort color)
+    {
+        this.color = color;
+    }
+}
+
+class TrafficLight
 {
     private Led R, Y, G;
     //State is 0 for green, 1 for yellow, and 2 for red
+    //Use byte constants declared in this module instead of literals
     private byte state = 0;
     
     this(int pinR, int pinY, int pinG)
@@ -66,11 +104,14 @@ extern (C++) class TrafficLight
         }
     }
     
+    //changeState deafults to a 1000 milisecond yellow if no time is given
     public void changeState()
     {
         this.changeState(1000);
     }
     
+    //Prefer changeState over setState
+    //Honestly don't know why I have this, although makes sense as a setter
     public void setState(int state)
     {
         switch (state)
@@ -132,13 +173,14 @@ extern (C++) class TrafficLight
 class Intersection
 {
     public TrafficLight[string] lights;
-    private string[][string] orientation;
+    private string[][string] orientations;
     
     public void addLight(string name, int pinR, int pinY, int pinG)
     {
         this.lights[name] = new TrafficLight(pinR, pinY, pinG);
     }
     
+    //For specific light functions. Prefer to use setLightState.
     public TrafficLight getLight(string name)
     {
         if (name in this.lights)
@@ -151,8 +193,21 @@ class Intersection
         }
     }
     
-    public void setLayout(string direction, string[] lights...)
+    public void setLightState(string name, int state)
     {
-        
+        this.lights[name].setState(state);
+    }
+    
+    public void addLayout(string direction, string[] lights...)
+    {
+        this.orientations[direction] = lights;
+    }
+    
+    public void setLayoutState(string name, int state)
+    {
+        foreach(light; this.orientations[name])
+        {
+            this.lights[light].setState(state);
+        }
     }
 }

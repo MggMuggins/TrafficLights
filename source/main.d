@@ -13,9 +13,10 @@ void setup()
     collageAndConstitution.addLight("northConstitution", 9, 8, 7);
     collageAndConstitution.addLight("southConstitution", 6, 5, 4);
     writeln();
-    collageAndConstitution.getLight("eastCollage").setState(GREEN);
-    collageAndConstitution.getLight("northConstitution").setState(RED);
-    collageAndConstitution.getLight("southConstitution").setState(RED);
+    collageAndConstitution.setLightState("eastCollage", GREEN);
+    
+    collageAndConstitution.addLayout("ns", "northConstitution", "southConstitution");
+    collageAndConstitution.setLayoutState("ns", RED);
 }
 
 void loop()
