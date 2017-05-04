@@ -17,7 +17,14 @@ void setup()
 
 void loop()
 {
+    delay(7000);
+    light1.changeState();
     delay(1000);
+    light2.changeState();
+    delay(7000);
+    light2.changeState();
+    delay(1000);
+    light1.changeState();
 }
 
 int main(string[] args)

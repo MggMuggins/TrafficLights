@@ -8,7 +8,7 @@ import infrastructure;
 const byte GREEN = 0, YELLOW = 1, RED = 2;
 const byte OFF = 0, ON = 1;
 
-class Led
+extern (C++) class Led
 {
     public int pin;
     private byte state = OFF;
@@ -39,7 +39,7 @@ class Led
     }
 }
 
-class TrafficLight
+extern (C++) class TrafficLight
 {
     private Led R, Y, G;
     //State is 0 for green, 1 for yellow, and 2 for red
@@ -126,5 +126,15 @@ class TrafficLight
             default:
                 throw new Exception("Incorrect State");
         }
+    }
+}
+
+class Intersection
+{
+    
+    
+    this()
+    {
+        
     }
 }
