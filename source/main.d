@@ -4,27 +4,32 @@ import infrastructure;
 import tlapi;
 import std.stdio : writeln;
 
-TrafficLight light1, light2;
+Intersection collageAndConstitution;
 
 void setup()
 {
-    light1 = new TrafficLight(12, 11, 10);
-    light2 = new TrafficLight(9, 8, 7);
+    collageAndConstitution = new Intersection();
+    collageAndConstitution.addLight("eastCollage", 12, 11, 10);
+    collageAndConstitution.addLight("northConstitution", 9, 8, 7);
+    collageAndConstitution.addLight("southConstitution", 6, 5, 4);
     writeln();
-    light1.setState(GREEN);
-    light2.setState(RED);
+    collageAndConstitution.getLight("eastCollage").setState(GREEN);
+    collageAndConstitution.getLight("northConstitution").setState(RED);
+    collageAndConstitution.getLight("southConstitution").setState(RED);
 }
 
 void loop()
 {
     delay(7000);
-    light1.changeState();
+    collageAndConstitution.getLight("eastCollage").changeState();
     delay(1000);
-    light2.changeState();
+    collageAndConstitution.getLight("southConstitution").changeState();
+    collageAndConstitution.getLight("northConstitution").changeState();
     delay(7000);
-    light2.changeState();
+    collageAndConstitution.getLight("southConstitution").changeState();
+    collageAndConstitution.getLight("northConstitution").changeState();
     delay(1000);
-    light1.changeState();
+    collageAndConstitution.getLight("eastCollage").changeState();
 }
 
 int main(string[] args)

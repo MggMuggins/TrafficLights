@@ -131,9 +131,27 @@ extern (C++) class TrafficLight
 
 class Intersection
 {
+    public TrafficLight[string] lights;
+    private string[][string] orientation;
     
+    public void addLight(string name, int pinR, int pinY, int pinG)
+    {
+        this.lights[name] = new TrafficLight(pinR, pinY, pinG);
+    }
     
-    this()
+    public TrafficLight getLight(string name)
+    {
+        if (name in this.lights)
+        {
+            return this.lights[name];
+        }
+        else
+        {
+            throw new Exception("Incorrect Light Reference");
+        }
+    }
+    
+    public void setLayout(string direction, string[] lights...)
     {
         
     }

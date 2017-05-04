@@ -3,6 +3,9 @@
 	"authors": [
 		"SamwiseFilmore"
 	],
+	"dependencies": {
+		"consoled": "~>1.0.4"
+	},
 	"description": "Object-Oriented Traffic Light Controller",
 	"copyright": "Copyright © 2017, SamwiseFilmore",
 	"license": "none"
