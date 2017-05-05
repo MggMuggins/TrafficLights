@@ -3,7 +3,9 @@ module main;
 import infrastructure;
 import renderer;
 import tlapi;
+
 import std.stdio : writeln;
+import core.thread;
 import consoled;
 
 /*Skipping all this for render testing
@@ -47,6 +49,9 @@ int main(string[] args)
     auto render = new LightRenderer();
     render.registerTile("Text", 4, 6);
     render.registerTile("Other Text", 8, 10);
+    render.update();
+    Thread.sleep(dur!"seconds"(3));
+    render.registerTile("Different text", 4, 6);
     render.update();
     return 0;
 }
