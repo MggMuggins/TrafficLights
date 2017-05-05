@@ -1,14 +1,14 @@
 module main;
 
 import infrastructure;
+import renderer;
 import tlapi;
 import std.stdio : writeln;
+import consoled;
 
-Intersection collageAndConstitution;
-
-void setup()
+/*Skipping all this for render testing
+void setup(Intersection collageAndConstitution)
 {
-    collageAndConstitution = new Intersection();
     collageAndConstitution.addLight("eastCollage", 12, 11, 10);
     collageAndConstitution.addLight("northConstitution", 9, 8, 7);
     collageAndConstitution.addLight("southConstitution", 6, 5, 4);
@@ -19,7 +19,7 @@ void setup()
     collageAndConstitution.setLayoutState("ns", RED);
 }
 
-void loop()
+void loop(Intersection collageAndConstitution)
 {
     delay(7000);
     collageAndConstitution.getLight("eastCollage").changeState();
@@ -32,12 +32,21 @@ void loop()
     delay(1000);
     collageAndConstitution.getLight("eastCollage").changeState();
 }
+*/
 
 int main(string[] args)
 {
+    /* Skipping all this for rendering Testing
+    Intersection collageAndConstitution = new Intersection();
     writeln("Setup Routine:\n");
-    setup();
+    collageAndConstitution.setup();
     writeln("\nLoop Once:\n");
-    loop();
+    collageAndConstitution.loop();
+    */
+    writeln(size);
+    auto render = new LightRenderer();
+    render.registerTile("Text", 4, 6);
+    render.registerTile("Other Text", 8, 10);
+    render.update();
     return 0;
 }

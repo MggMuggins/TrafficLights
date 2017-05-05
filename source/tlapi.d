@@ -60,7 +60,7 @@ class ConsoleLight : Bulb
     
     public void turnOn()
     {
-        drawLight(name, color);
+        
         this.state = ON;
     }
     

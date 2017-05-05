@@ -3,12 +3,6 @@ module infrastructure;
 import std.stdio : writefln;
 import consoled;
 
-//Screen drawing functions
-void drawLight(string name, ushort color)
-{
-    writecln(Bg.color, name);
-}
-
 //D Infrastructure, to allow calls to arduino functions
 //This stuff is all deprecated. I'll write replacements for it sometime.
 const int OUTPUT = 0, HIGH = 1, LOW = 0;
