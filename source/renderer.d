@@ -6,12 +6,6 @@ import std.stdio;
 interface Renderer
 {
     void update();
-}
-
-interface TerminalRenderer : Renderer
-{
-    public void registerTile(string tile, ScreenCoordinate pos);
-    public void registerTile(string tile, int posX, int posY);
     private char[][] drawScreen();
 }
 
@@ -27,7 +21,7 @@ class ScreenCoordinate
     }
 }
 
-class LightRenderer : TerminalRenderer
+class TerminalRenderer : Renderer
 {
     private ScreenCoordinate[string] tiles;
     private bool isClear = true;
@@ -49,6 +43,7 @@ class LightRenderer : TerminalRenderer
     {
         if(this.isClear)
         {
+            //Render a new screen, and output it
             char[][] screen = this.drawScreen();
             foreach(indx, y; screen)
             {
@@ -62,7 +57,7 @@ class LightRenderer : TerminalRenderer
         }
         else if(this.isChanged)
         {
-            //Iterate over the tiles to render and rewrite them
+            //Iterate over the tiles to rewrite them
             foreach(name, lightCoord; this.tiles)
             {
                 setCursorPos(lightCoord.x, lightCoord.y);

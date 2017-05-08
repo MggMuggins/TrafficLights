@@ -2,7 +2,7 @@ module main;
 
 import infrastructure;
 import renderer;
-import tlapi;
+import trafficlights;
 
 import std.stdio : writeln;
 import core.thread;
@@ -46,7 +46,7 @@ int main(string[] args)
     collageAndConstitution.loop();
     */
     writeln(size);
-    auto render = new LightRenderer();
+    auto render = new TerminalRenderer();
     render.registerTile("Text", 4, 6);
     render.registerTile("Other Text", 8, 10);
     render.update();

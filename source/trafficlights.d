@@ -1,4 +1,4 @@
-module tlapi;
+module trafficlights;
 
 import infrastructure;
 import renderer;
