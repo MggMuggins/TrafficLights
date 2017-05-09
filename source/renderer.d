@@ -6,7 +6,7 @@ import std.stdio;
 interface Renderer
 {
     void update();
-    private char[][] drawScreen();
+    private Cchar[][] drawScreen();
 }
 
 class ScreenCoordinate
@@ -21,22 +21,59 @@ class ScreenCoordinate
     }
 }
 
-class TerminalRenderer : Renderer
+class Cchar
 {
-    private ScreenCoordinate[string] tiles;
+    public char ch;
+    public Color bgColor = Color.initial;
+    public Color fgColor = Color.initial;
+    
+    this(char ch)
+    {
+        this.ch = ch;
+    }
+}
+
+class Tile
+{
+    public ScreenCoordinate coordinate;
+    public string text;
+    
+    this(string name, ScreenCoordinate pos)
+    {
+        this.text = name;
+        this.coordinate = pos;
+    }
+    
+    this(string name, int posX, int posY)
+    {
+        this.text = name;
+        this.coordinate = new ScreenCoordinate(posX, posY);
+    }
+}
+
+class TileRenderer : Renderer
+{
+    private Tile[] tiles;
     private bool isClear = true;
     private bool isChanged = false;
     
-    public void registerTile(string tile, ScreenCoordinate pos)
+    public void registerTile(Tile tile)
     {
         this.isChanged = true;
-        tiles[tile] = pos;
+        this.tiles ~= tile;
     }
     
-    public void registerTile(string tile, int posX, int posY)
+    public void registerTile(string name, ScreenCoordinate pos)
+    {
+        
+        this.isChanged = true;
+        this.tiles ~= new Tile(name, pos);
+    }
+    
+    public void registerTile(string name, int posX, int posY)
     {
         this.isChanged = true;
-        tiles[tile] = new ScreenCoordinate(posX, posY);
+        this.tiles ~= new Tile(name, posX, posY);
     }
     
     public void update()
@@ -44,12 +81,14 @@ class TerminalRenderer : Renderer
         if(this.isClear)
         {
             //Render a new screen, and output it
-            char[][] screen = this.drawScreen();
+            Cchar[][] screen = this.drawScreen();
             foreach(indx, y; screen)
             {
                 foreach(x; screen[indx])
                 {
-                    write(x);
+                    foreground = x.fgColor;
+                    background = x.bgColor;
+                    writec(x.ch);
                 }
                 writeln();
             }
@@ -58,20 +97,20 @@ class TerminalRenderer : Renderer
         else if(this.isChanged)
         {
             //Iterate over the tiles to rewrite them
-            foreach(name, lightCoord; this.tiles)
+            foreach(tile; this.tiles)
             {
-                setCursorPos(lightCoord.x, lightCoord.y);
-                write(name);
+                setCursorPos(tile.coordinate.x, tile.coordinate.y);
+                write(tile.text);
             }
-            setCursorPos(size.x, size.y - 1);
+            setCursorPos(size.x - 1, size.y - 1);
         }
         else {}
     }
     
-    private char[][] drawScreen()
+    private Cchar[][] drawScreen()
     {
-        char[][] screen;
-        char[] line;
+        Cchar[][] screen;
+        Cchar[] line;
         ulong counter;
         //Iterate over Y of screen
         foreach(posY; 0..size.y)
@@ -80,12 +119,16 @@ class TerminalRenderer : Renderer
             foreach(posX; 0..size.x)
             {
                 //Iterate over the tiles to render and write them if the current insertion point is at their location
-                foreach(name, lightCoord; this.tiles)
+                foreach(tile; this.tiles)
                 {
-                    if(lightCoord.x - 1 == posX && lightCoord.y - 1 == posY)
+                    if(tile.coordinate.x - 1 == posX && tile.coordinate.y - 1 == posY)
                     {
-                        line ~= name;
-                        counter = name.length;
+                        //Run through the string and write it into the colored character manually
+                        foreach(ch; tile.text)
+                        {
+                            line ~= new Cchar(ch);
+                        }
+                        counter = tile.text.length;
                     }
                 }
                 //Make sure there wasn't a tile inserted
@@ -95,7 +138,7 @@ class TerminalRenderer : Renderer
                 }
                 else
                 {
-                    line ~= '.';
+                    line ~= new Cchar('.');
                 }
             }
             screen ~= line;
