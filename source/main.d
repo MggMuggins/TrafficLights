@@ -5,6 +5,7 @@ import renderer;
 import trafficlights;
 
 import std.stdio : writeln;
+import std.stdio : stdout;
 import core.thread;
 import consoled;
 
@@ -34,7 +35,7 @@ void loop(Intersection collageAndConstitution)
     delay(1000);
     collageAndConstitution.getLight("eastCollage").changeState();
 }
-*/
+//*/
 
 int main(string[] args)
 {
@@ -44,14 +45,22 @@ int main(string[] args)
     collageAndConstitution.setup();
     writeln("\nLoop Once:\n");
     collageAndConstitution.loop();
-    */
-    writeln(size);
+    //*/
+    /* Render Testing Stuffs
     auto render = new CTileRenderer();
-    render.registerTile("Text", 4, 6, Color.red);
-    render.registerTile("Other Text", 8, 10, Color.red);
-    render.update();
-    render.registerTile("Different text", 4, 6, Color.green);
+    render.registerTile("Text", 4, 6, Color.initial, Color.red);
+    render.registerTile("Other Text", 8, 10, Color.initial, Color.red);
     render.update();
     Thread.sleep(dur!"seconds"(3));
+    render.registerTile("Different text", 4, 6, Color.initial, Color.green);
+    render.update();
+    Thread.sleep(dur!"seconds"(3));
+    //*/
+    //*
+    auto direction = new TrafficDirection();
+    auto lights = [new TrafficLight("South", 4, 4), new TrafficLight("North", 4, 8)];
+    direction.addLight(lights);
+    direction.render();
+    //*/
     return 0;
 }

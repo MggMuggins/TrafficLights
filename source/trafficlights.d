@@ -2,20 +2,73 @@ module trafficlights;
 
 import infrastructure;
 import renderer;
+import consoled;
 
-//Portable code
+class TrafficLight : CTile
+{
+    this(string name, ScreenCoordinate pos)
+    {
+        
+        super(name, pos);
+    }
+    
+    this(string name, int posX, int posY)
+    {
+        super(name, posX, posY);
+    }
+    
+    public void turnGreen()
+    {
+        this.bg = Color.green;
+    }
+    
+    public void turnYellow()
+    {
+        this.bg = Color.yellow;
+    }
+    
+    public void turnRed()
+    {
+        this.bg = Color.red;
+    }
+}
 
-//Useable aliases for certain values
+class TrafficDirection
+{
+    private TrafficLight[] lights;
+    private CTileRenderer renderer;
+    private bool hasRenderer = false;
+    
+    public void addLight(TrafficLight light)
+    {
+        this.lights ~= light;
+    }
+    
+    public void addLight(TrafficLight[] light)
+    {
+        this.lights ~= light;
+    }
+    
+    public void render()
+    {
+        if(!this.hasRenderer)
+        {
+            this.renderer = new CTileRenderer();
+        }
+        this.renderer.clearTileRegistry();
+        foreach(tile; this.lights)
+        {
+            this.renderer.registerTile(tile);
+        }
+        this.renderer.update();
+    }
+}
+
+/*Old Traffic Light Stuff
 const byte GREEN = 0, YELLOW = 1, RED = 2;
 const byte OFF = 0, ON = 1;
 
-interface Bulb
-{
-    public void turnOn();
-    public void turnOff();
-}
-
-class Led : Bulb
+class Led
 {
     public int pin;
     private byte state = OFF;
@@ -43,36 +96,6 @@ class Led : Bulb
             digitalWrite(pin, LOW);
             this.state = OFF;
         }
-    }
-}
-
-class ConsoleLight : Bulb
-{
-    public string name;
-    public ushort color;
-    private byte state = OFF;
-    
-    this(string name)
-    {
-        this.name = name;
-        this.turnOff;
-    }
-    
-    public void turnOn()
-    {
-        
-        this.state = ON;
-    }
-    
-    public void turnOff()
-    {
-        
-        this.state = OFF;
-    }
-    
-    public void setColor(ushort color)
-    {
-        this.color = color;
     }
 }
 
@@ -211,3 +234,4 @@ class Intersection
         }
     }
 }
+*/

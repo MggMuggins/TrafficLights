@@ -17,8 +17,8 @@ class ScreenCoordinate
 
 class Tile
 {
-    public ScreenCoordinate coordinate;
-    public string text;
+    private ScreenCoordinate coordinate;
+    private string text;
     
     this()
     {
@@ -46,8 +46,26 @@ class Tile
 
 class CTile : Tile
 {
-    public Color fg = Color.initial;
-    public Color bg = Color.initial;
+    protected Color fg;
+    protected Color bg;
+    
+    this()
+    {
+        this.coordinate = new ScreenCoordinate(0, 0);
+        this.text = "";
+        this.fg = Color.initial;
+        this.bg = Color.initial;
+    }
+    
+    this(string name, ScreenCoordinate pos)
+    {
+        super(name, pos);
+    }
+    
+    this(string name, int posX, int posY)
+    {
+        super(name, posX, posY);
+    }
     
     this(string name, ScreenCoordinate pos, Color fg)
     {
@@ -64,8 +82,7 @@ class CTile : Tile
     
     this(string name, int x, int y, Color fg)
     {
-        this.text = name;
-        this.coordinate = new ScreenCoordinate(x, y);
+        super(name, x, y);
         this.fg = fg;
     }
     
@@ -81,6 +98,7 @@ class CTile : Tile
         foreground(this.fg);
         background(this.bg);
         writec(this.text);
+        resetColors();
     }
 }
 
@@ -89,12 +107,6 @@ class TileRenderer
     private Tile[] tiles;
     private bool isClear = true;
     private bool isChanged = false;
-    
-    public void registerTile(Tile tile)
-    {
-        this.isChanged = true;
-        this.tiles ~= tile;
-    }
     
     public void registerTile(string name, ScreenCoordinate pos)
     {
@@ -109,6 +121,11 @@ class TileRenderer
         this.tiles ~= new Tile(name, posX, posY);
     }
     
+    public void clearTileRegistry()
+    {
+        this.tiles = [];
+    }
+    
     public void update()
     {
         if(this.isChanged)
@@ -117,6 +134,7 @@ class TileRenderer
             this.writeTiles();
             this.isChanged = false;
         }
+        stdout.flush();
     }
     
     private void writeTiles()
@@ -136,6 +154,12 @@ class TileRenderer
 
 class CTileRenderer : TileRenderer
 {
+    public void registerTile(CTile tile)
+    {
+        this.tiles ~= tile;
+        this.isChanged = true;
+    }
+    
     public void registerTile(string name, ScreenCoordinate pos, Color fg)
     {
         this.tiles ~= new CTile(name, pos, fg);
