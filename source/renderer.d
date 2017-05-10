@@ -37,6 +37,11 @@ class Tile
         this.text = name;
         this.coordinate = new ScreenCoordinate(posX, posY);
     }
+    
+    public void render()
+    {
+        write(this.text);
+    }
 }
 
 class CTile : Tile
@@ -59,7 +64,8 @@ class CTile : Tile
     
     this(string name, int x, int y, Color fg)
     {
-        super(name, x, y);
+        this.text = name;
+        this.coordinate = new ScreenCoordinate(x, y);
         this.fg = fg;
     }
     
@@ -68,6 +74,13 @@ class CTile : Tile
         super(name, x, y);
         this.fg = fg;
         this.bg = bg;
+    }
+    
+    public override void render()
+    {
+        foreground(this.fg);
+        background(this.bg);
+        writec(this.text);
     }
 }
 
@@ -98,12 +111,6 @@ class TileRenderer
     
     public void update()
     {
-        if(this.isClear)
-        {
-            clearScreen();
-            this.isClear = false;
-        }
-        
         if(this.isChanged)
         {
             clearScreen();
@@ -117,7 +124,7 @@ class TileRenderer
         foreach(tile; this.tiles)
         {
             setCursorPos(tile.coordinate.x, tile.coordinate.y);
-            write(tile.text);
+            tile.render();
         }
     }
     
@@ -129,36 +136,27 @@ class TileRenderer
 
 class CTileRenderer : TileRenderer
 {
-    private CTile[] tiles;
-    
     public void registerTile(string name, ScreenCoordinate pos, Color fg)
     {
         this.tiles ~= new CTile(name, pos, fg);
+        this.isChanged = true;
     }
     
     public void registerTile(string name, ScreenCoordinate pos, Color fg, Color bg)
     {
         this.tiles ~= new CTile(name, pos, fg, bg);
+        this.isChanged = true;
     }
     
     public void registerTile(string name, int x, int y, Color fg)
     {
         this.tiles ~= new CTile(name, x, y, fg);
+        this.isChanged = true;
     }
     
     public void registerTile(string name, int x, int y, Color fg, Color bg)
     {
         this.tiles ~= new CTile(name, x, y, fg, bg);
-    }
-    
-    private void writeTiles()
-    {
-        foreach(tile; this.tiles)
-        {
-            setCursorPos(tile.coordinate.x, tile.coordinate.y);
-            foreground(tile.fg);
-            background(tile.bg);
-            writec(tile.text);
-        }
+        this.isChanged = true;
     }
 }
