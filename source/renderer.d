@@ -3,12 +3,6 @@ module renderer;
 import consoled;
 import std.stdio;
 
-interface Renderer
-{
-    void update();
-    private Cchar[][] drawScreen();
-}
-
 class ScreenCoordinate
 {
     public int x;
@@ -21,22 +15,16 @@ class ScreenCoordinate
     }
 }
 
-class Cchar
-{
-    public char ch;
-    public Color bgColor = Color.initial;
-    public Color fgColor = Color.initial;
-    
-    this(char ch)
-    {
-        this.ch = ch;
-    }
-}
-
 class Tile
 {
     public ScreenCoordinate coordinate;
     public string text;
+    
+    this()
+    {
+        this.coordinate = new ScreenCoordinate(0, 0);
+        this.text = "";
+    }
     
     this(string name, ScreenCoordinate pos)
     {
@@ -51,7 +39,39 @@ class Tile
     }
 }
 
-class TileRenderer : Renderer
+class CTile : Tile
+{
+    public Color fg = Color.initial;
+    public Color bg = Color.initial;
+    
+    this(string name, ScreenCoordinate pos, Color fg)
+    {
+        super(name, pos);
+        this.fg = fg;
+    }
+    
+    this(string name, ScreenCoordinate pos, Color fg, Color bg)
+    {
+        super(name, pos);
+        this.fg = fg;
+        this.bg = bg;
+    }
+    
+    this(string name, int x, int y, Color fg)
+    {
+        super(name, x, y);
+        this.fg = fg;
+    }
+    
+    this(string name, int x, int y, Color fg, Color bg)
+    {
+        super(name, x, y);
+        this.fg = fg;
+        this.bg = bg;
+    }
+}
+
+class TileRenderer
 {
     private Tile[] tiles;
     private bool isClear = true;
@@ -80,70 +100,65 @@ class TileRenderer : Renderer
     {
         if(this.isClear)
         {
-            //Render a new screen, and output it
-            Cchar[][] screen = this.drawScreen();
-            foreach(indx, y; screen)
-            {
-                foreach(x; screen[indx])
-                {
-                    foreground = x.fgColor;
-                    background = x.bgColor;
-                    writec(x.ch);
-                }
-                writeln();
-            }
+            clearScreen();
             this.isClear = false;
         }
-        else if(this.isChanged)
+        
+        if(this.isChanged)
         {
-            //Iterate over the tiles to rewrite them
-            foreach(tile; this.tiles)
-            {
-                setCursorPos(tile.coordinate.x, tile.coordinate.y);
-                write(tile.text);
-            }
-            setCursorPos(size.x - 1, size.y - 1);
+            clearScreen();
+            this.writeTiles();
+            this.isChanged = false;
         }
-        else {}
     }
     
-    private Cchar[][] drawScreen()
+    private void writeTiles()
     {
-        Cchar[][] screen;
-        Cchar[] line;
-        ulong counter;
-        //Iterate over Y of screen
-        foreach(posY; 0..size.y)
+        foreach(tile; this.tiles)
         {
-            //Iterate over X of screen
-            foreach(posX; 0..size.x)
-            {
-                //Iterate over the tiles to render and write them if the current insertion point is at their location
-                foreach(tile; this.tiles)
-                {
-                    if(tile.coordinate.x - 1 == posX && tile.coordinate.y - 1 == posY)
-                    {
-                        //Run through the string and write it into the colored character manually
-                        foreach(ch; tile.text)
-                        {
-                            line ~= new Cchar(ch);
-                        }
-                        counter = tile.text.length;
-                    }
-                }
-                //Make sure there wasn't a tile inserted
-                if (counter != 0)
-                {
-                    --counter;
-                }
-                else
-                {
-                    line ~= new Cchar('.');
-                }
-            }
-            screen ~= line;
-            line = [];
+            setCursorPos(tile.coordinate.x, tile.coordinate.y);
+            write(tile.text);
         }
-        return screen;
+    }
+    
+    ~this()
+    {
+        setCursorPos(0, size.y + 1);
+    }
+}
+
+class CTileRenderer : TileRenderer
+{
+    private CTile[] tiles;
+    
+    public void registerTile(string name, ScreenCoordinate pos, Color fg)
+    {
+        this.tiles ~= new CTile(name, pos, fg);
+    }
+    
+    public void registerTile(string name, ScreenCoordinate pos, Color fg, Color bg)
+    {
+        this.tiles ~= new CTile(name, pos, fg, bg);
+    }
+    
+    public void registerTile(string name, int x, int y, Color fg)
+    {
+        this.tiles ~= new CTile(name, x, y, fg);
+    }
+    
+    public void registerTile(string name, int x, int y, Color fg, Color bg)
+    {
+        this.tiles ~= new CTile(name, x, y, fg, bg);
+    }
+    
+    private void writeTiles()
+    {
+        foreach(tile; this.tiles)
+        {
+            setCursorPos(tile.coordinate.x, tile.coordinate.y);
+            foreground(tile.fg);
+            background(tile.bg);
+            writec(tile.text);
+        }
     }
 }

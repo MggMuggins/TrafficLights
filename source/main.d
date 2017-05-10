@@ -46,12 +46,11 @@ int main(string[] args)
     collageAndConstitution.loop();
     */
     writeln(size);
-    auto render = new TileRenderer();
-    render.registerTile("Text", 4, 6);
-    render.registerTile("Other Text", 8, 10);
+    auto render = new CTileRenderer();
+    render.registerTile("Text", 4, 6, Color.red);
+    render.registerTile("Other Text", 8, 10, Color.blue);
     render.update();
-    Thread.sleep(dur!"seconds"(3));
-    render.registerTile("Different text", 4, 6);
+    render.registerTile("Different text", 4, 6, Color.green);
     render.update();
     Thread.sleep(dur!"seconds"(3));
     return 0;
