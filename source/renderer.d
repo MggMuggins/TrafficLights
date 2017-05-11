@@ -2,6 +2,7 @@ module renderer;
 
 import consoled;
 import std.stdio;
+import std.format;
 
 class ScreenCoordinate
 {
@@ -13,48 +14,51 @@ class ScreenCoordinate
         this.x = posX;
         this.y = posY;
     }
+    
+    public override string toString()
+    {
+        return format("%s, %s", this.x, this.y);
+    }
 }
 
 class Tile
 {
-    private ScreenCoordinate coordinate;
-    private string text;
+    protected ScreenCoordinate coordinate;
+    protected string name;
     
     this()
     {
         this.coordinate = new ScreenCoordinate(0, 0);
-        this.text = "";
+        this.name = "";
     }
     
     this(string name, ScreenCoordinate pos)
     {
-        this.text = name;
+        this.name = name;
         this.coordinate = pos;
     }
     
     this(string name, int posX, int posY)
     {
-        this.text = name;
+        this.name = name;
         this.coordinate = new ScreenCoordinate(posX, posY);
     }
     
     public void render()
     {
-        write(this.text);
+        write(this.name);
     }
 }
 
 class CTile : Tile
 {
-    protected Color fg;
-    protected Color bg;
+    protected Color fg = Color.white;
+    protected Color bg = Color.initial;
     
     this()
     {
         this.coordinate = new ScreenCoordinate(0, 0);
-        this.text = "";
-        this.fg = Color.initial;
-        this.bg = Color.initial;
+        this.name = "";
     }
     
     this(string name, ScreenCoordinate pos)
@@ -97,39 +101,43 @@ class CTile : Tile
     {
         foreground(this.fg);
         background(this.bg);
-        writec(this.text);
+        writec(this.name);
         resetColors();
     }
 }
 
 class TileRenderer
 {
-    private Tile[] tiles;
-    private bool isClear = true;
-    private bool isChanged = false;
+    private Tile[] tileRegistry;
     
     public void registerTile(Tile tile)
     {
-        this.isChanged = true;
-        this.tiles ~= tile;
+        this.tileRegistry ~= tile;
     }
     
     public void clearTileRegistry()
     {
-        this.tiles = [];
+        this.tileRegistry = [];
     }
     
+    //For debugging, so that you don't include the screen positions
+    public void rawUpdate()
+    {
+        foreach(tile; this.tileRegistry)
+        {
+            tile.render();
+        }
+    }
+    
+    //Currently Redrawing all the tiles
+    //I don't like this, adding to todo
     public void update()
     {
-        if(this.isChanged)
+        clearScreen();
+        foreach(tile; this.tileRegistry)
         {
-            clearScreen();
-            foreach(tile; this.tiles)
-            {
-                setCursorPos(tile.coordinate.x, tile.coordinate.y);
-                tile.render();
-            }
-            this.isChanged = false;
+            setCursorPos(tile.coordinate.x, tile.coordinate.y);
+            tile.render();
         }
         stdout.flush();
     }

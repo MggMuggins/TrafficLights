@@ -10,5 +10,10 @@ Now the project is becoming a terminal rendering engine with the help of [Consol
 # Building/Contributing
 To build, you'll need dub (for build system, and dependency managment). You'll also need a D2 compiler. Simply run ```dub``` in the root directory to build and run.
 
-# Devnotes
-* If weird output stuff happens, run ```dub build --force```.
+# Todo
+- [ ] Build Basic TrafficDirection and Intersection classes and interface
+- [ ] Make Engine more Efficient
+- [ ] Documentation!
+- [ ] Mature Engine
+- [ ] Separate Engine and Traffic Light api
+- [ ] Release both projects via dub
