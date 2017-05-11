@@ -46,13 +46,13 @@ int main(string[] args)
     writeln("\nLoop Once:\n");
     collageAndConstitution.loop();
     //*/
-    /* Render Testing Stuffs
-    auto render = new CTileRenderer();
-    render.registerTile("Text", 4, 6, Color.initial, Color.red);
-    render.registerTile("Other Text", 8, 10, Color.initial, Color.red);
+    //* Render Testing Stuffs
+    auto render = new TileRenderer();
+    render.registerTile(new CTile("Text", 4, 6, Color.initial, Color.red));
+    render.registerTile(new CTile("Other Text", 8, 10, Color.initial, Color.red));
     render.update();
     Thread.sleep(dur!"seconds"(3));
-    render.registerTile("Different text", 4, 6, Color.initial, Color.green);
+    render.registerTile(new CTile("Different text", 4, 6, Color.initial, Color.green));
     render.update();
     Thread.sleep(dur!"seconds"(3));
     //*/

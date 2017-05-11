@@ -1,6 +1,6 @@
 module trafficlights;
 
-import infrastructure;
+//import infrastructure;
 import renderer;
 import consoled;
 
@@ -8,7 +8,6 @@ class TrafficLight : CTile
 {
     this(string name, ScreenCoordinate pos)
     {
-        
         super(name, pos);
     }
     
@@ -36,7 +35,7 @@ class TrafficLight : CTile
 class TrafficDirection
 {
     private TrafficLight[] lights;
-    private CTileRenderer renderer;
+    private TileRenderer renderer;
     private bool hasRenderer = false;
     
     public void addLight(TrafficLight light)
@@ -53,7 +52,7 @@ class TrafficDirection
     {
         if(!this.hasRenderer)
         {
-            this.renderer = new CTileRenderer();
+            this.renderer = new TileRenderer();
         }
         this.renderer.clearTileRegistry();
         foreach(tile; this.lights)

@@ -108,17 +108,10 @@ class TileRenderer
     private bool isClear = true;
     private bool isChanged = false;
     
-    public void registerTile(string name, ScreenCoordinate pos)
-    {
-        
-        this.isChanged = true;
-        this.tiles ~= new Tile(name, pos);
-    }
-    
-    public void registerTile(string name, int posX, int posY)
+    public void registerTile(Tile tile)
     {
         this.isChanged = true;
-        this.tiles ~= new Tile(name, posX, posY);
+        this.tiles ~= tile;
     }
     
     public void clearTileRegistry()
@@ -131,56 +124,18 @@ class TileRenderer
         if(this.isChanged)
         {
             clearScreen();
-            this.writeTiles();
+            foreach(tile; this.tiles)
+            {
+                setCursorPos(tile.coordinate.x, tile.coordinate.y);
+                tile.render();
+            }
             this.isChanged = false;
         }
         stdout.flush();
     }
     
-    private void writeTiles()
-    {
-        foreach(tile; this.tiles)
-        {
-            setCursorPos(tile.coordinate.x, tile.coordinate.y);
-            tile.render();
-        }
-    }
-    
     ~this()
     {
         setCursorPos(0, size.y + 1);
-    }
-}
-
-class CTileRenderer : TileRenderer
-{
-    public void registerTile(CTile tile)
-    {
-        this.tiles ~= tile;
-        this.isChanged = true;
-    }
-    
-    public void registerTile(string name, ScreenCoordinate pos, Color fg)
-    {
-        this.tiles ~= new CTile(name, pos, fg);
-        this.isChanged = true;
-    }
-    
-    public void registerTile(string name, ScreenCoordinate pos, Color fg, Color bg)
-    {
-        this.tiles ~= new CTile(name, pos, fg, bg);
-        this.isChanged = true;
-    }
-    
-    public void registerTile(string name, int x, int y, Color fg)
-    {
-        this.tiles ~= new CTile(name, x, y, fg);
-        this.isChanged = true;
-    }
-    
-    public void registerTile(string name, int x, int y, Color fg, Color bg)
-    {
-        this.tiles ~= new CTile(name, x, y, fg, bg);
-        this.isChanged = true;
     }
 }
