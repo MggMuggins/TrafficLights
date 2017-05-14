@@ -4,6 +4,12 @@ import consoled;
 import std.stdio;
 import std.format;
 
+enum RenderMode
+{
+    raw,
+    fancy
+}
+
 class ScreenCoordinate
 {
     public int x;
@@ -109,6 +115,8 @@ class CTile : Tile
 class TileRenderer
 {
     private Tile[] tileRegistry;
+    private RenderMode rendermode = RenderMode.fancy;
+    
     
     public void registerTile(Tile tile)
     {
@@ -120,8 +128,13 @@ class TileRenderer
         this.tileRegistry = [];
     }
     
+    public void setRenderMode(RenderMode mode)
+    {
+        this.rendermode = mode;
+    }
+    
     //For debugging, so that you don't include the screen positions
-    public void rawUpdate()
+    private void updateRaw()
     {
         foreach(tile; this.tileRegistry)
         {
@@ -133,7 +146,7 @@ class TileRenderer
     
     //Currently Redrawing all the tiles
     //I don't like this, adding to todo
-    public void update()
+    private void updateFancy()
     {
         clearScreen();
         foreach(tile; this.tileRegistry)
@@ -142,6 +155,19 @@ class TileRenderer
             tile.render();
         }
         stdout.flush();
+    }
+    
+    
+    public void update()
+    {
+        if(this.rendermode == RenderMode.fancy)
+        {
+            this.updateFancy();
+        }
+        else if(this.rendermode == RenderMode.raw)
+        {
+            this.updateRaw();
+        }
     }
     
     ~this()

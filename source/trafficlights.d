@@ -2,9 +2,10 @@ module trafficlights;
 
 import renderer;
 import consoled;
-import std.stdio;
+import std.stdio : File;
+import std.stdio : write;
 import std.file : exists;
-import std.string;
+import std.string : strip;
 import std.format : formattedRead;
 
 enum LightState : byte
@@ -50,7 +51,7 @@ class Intersection
 {
     private TrafficLight[string] lights;
     private TileRenderer renderer;
-    //private bool isGreen;
+    
     
     this()
     {
@@ -91,6 +92,11 @@ class Intersection
         this.lights[name].setState(state);
     }
     
+    public void setRenderMode(RenderMode mode)
+    {
+        this.renderer.setRenderMode(mode);
+    }
+    
     //Don't really want to re-add all the tiles, just the ones that need to be rendered differently
     public void render()
     {
@@ -99,9 +105,6 @@ class Intersection
         {
             this.renderer.registerTile(tile);
         }
-        //Uncomment for raw rendering
-        //this.renderer.rawUpdate();
-        //Uncomment for regular rendering
         this.renderer.update();
     }
 }
