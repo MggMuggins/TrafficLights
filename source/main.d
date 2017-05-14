@@ -19,7 +19,7 @@ int main(string[] args)
     //*/
     //*
     auto direction = new Intersection();
-    direction.lightsFromFile("/usr/local/share/lights.txt");
+    direction.lightsFromFile("/usr/local/share/mggmuggins/lights.txt");
     direction.render();
     Thread.sleep(dur!"seconds"(2));
     direction.render();

@@ -3,6 +3,7 @@ module trafficlights;
 import renderer;
 import consoled;
 import std.stdio;
+import std.file : exists;
 import std.string;
 import std.format : formattedRead;
 
@@ -61,13 +62,14 @@ class Intersection
         string line, name;
         int posX, posY;
         File file;
-        try
+        if(path.exists())
         {
-            file = new File(path, "r");
+            file.open(path, "r");
         }
-        catch (std.exception.ErrnoException msg)
+        else
         {
             write("Invalid Filename");
+            return;
         }
         while(!file.eof())
         {
@@ -76,6 +78,7 @@ class Intersection
             line.formattedRead("%s, %s, %s", &name, &posX, &posY);
             this.addLight(new TrafficLight(name, posX, posY));
         }
+        file.close();
     }
     
     public void addLight(TrafficLight light)
