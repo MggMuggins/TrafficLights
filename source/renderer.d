@@ -38,16 +38,9 @@ class Tile
         this.name = "";
     }
     
-    this(string name, ScreenCoordinate pos)
+    public string getName()
     {
-        this.name = name;
-        this.pos = pos;
-    }
-    
-    this(string name, int posX, int posY)
-    {
-        this.name = name;
-        this.pos = new ScreenCoordinate(posX, posY);
+        return this.name;
     }
     
     public void render()
@@ -65,42 +58,6 @@ class CTile : Tile
     {
         this.pos = new ScreenCoordinate(0, 0);
         this.name = "";
-    }
-    
-    this(string name, ScreenCoordinate pos)
-    {
-        super(name, pos);
-    }
-    
-    this(string name, int posX, int posY)
-    {
-        super(name, posX, posY);
-    }
-    
-    this(string name, ScreenCoordinate pos, Color fg)
-    {
-        super(name, pos);
-        this.fg = fg;
-    }
-    
-    this(string name, ScreenCoordinate pos, Color fg, Color bg)
-    {
-        super(name, pos);
-        this.fg = fg;
-        this.bg = bg;
-    }
-    
-    this(string name, int x, int y, Color fg)
-    {
-        super(name, x, y);
-        this.fg = fg;
-    }
-    
-    this(string name, int x, int y, Color fg, Color bg)
-    {
-        super(name, x, y);
-        this.fg = fg;
-        this.bg = bg;
     }
     
     public override void render()

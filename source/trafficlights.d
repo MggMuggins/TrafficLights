@@ -8,11 +8,11 @@ import std.file : exists;
 import std.string : strip;
 import std.format : formattedRead;
 
-enum LightState : byte
+enum LightState
 {
-    GREEN = 0,
-    YELLOW = 1,
-    RED = 2
+    GREEN,
+    YELLOW,
+    RED
 }
 
 alias GREEN = LightState.GREEN;
@@ -23,12 +23,15 @@ class TrafficLight : CTile
 {
     this(string name, ScreenCoordinate pos)
     {
-        super(name, pos);
+        this.name = name;
+        this.pos = pos;
     }
     
     this(string name, int posX, int posY)
     {
-        super(name, posX, posY);
+        this.name = name;
+        this.pos.x = posX;
+        this.pos.y = posY;
     }
     
     public void setState(LightState state)
@@ -51,7 +54,6 @@ class Intersection
 {
     private TrafficLight[string] lights;
     private TileRenderer renderer;
-    
     
     this()
     {
@@ -84,7 +86,7 @@ class Intersection
     
     public void addLight(TrafficLight light)
     {
-        this.lights[light.name] = light;
+        this.lights[light.getName()] = light;
     }
     
     public void setLightState(string name, LightState state)
