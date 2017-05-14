@@ -3,10 +3,7 @@ module main;
 import renderer;
 import trafficlights;
 
-import std.stdio : writeln;
-import std.stdio : stdout;
 import core.thread;
-import consoled;
 
 int main(string[] args)
 {
@@ -22,10 +19,10 @@ int main(string[] args)
     //*/
     //*
     auto direction = new Intersection();
-    direction.addLight(new TrafficLight("North", 4, 8));
-    direction.addLight(new TrafficLight("South", 4, 4));
+    direction.lightsFromFile("/usr/local/share/lights.txt");
     direction.render();
     Thread.sleep(dur!"seconds"(2));
+    direction.render();
     //*/
     return 0;
 }

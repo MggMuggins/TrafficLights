@@ -23,25 +23,25 @@ class ScreenCoordinate
 
 class Tile
 {
-    protected ScreenCoordinate coordinate;
+    protected ScreenCoordinate pos;
     protected string name;
     
     this()
     {
-        this.coordinate = new ScreenCoordinate(0, 0);
+        this.pos = new ScreenCoordinate(0, 0);
         this.name = "";
     }
     
     this(string name, ScreenCoordinate pos)
     {
         this.name = name;
-        this.coordinate = pos;
+        this.pos = pos;
     }
     
     this(string name, int posX, int posY)
     {
         this.name = name;
-        this.coordinate = new ScreenCoordinate(posX, posY);
+        this.pos = new ScreenCoordinate(posX, posY);
     }
     
     public void render()
@@ -57,7 +57,7 @@ class CTile : Tile
     
     this()
     {
-        this.coordinate = new ScreenCoordinate(0, 0);
+        this.pos = new ScreenCoordinate(0, 0);
         this.name = "";
     }
     
@@ -126,6 +126,8 @@ class TileRenderer
         foreach(tile; this.tileRegistry)
         {
             tile.render();
+            write(" ", tile.pos.x, ", ", tile.pos.y);
+            writeln();
         }
     }
     
@@ -136,7 +138,7 @@ class TileRenderer
         clearScreen();
         foreach(tile; this.tileRegistry)
         {
-            setCursorPos(tile.coordinate.x, tile.coordinate.y);
+            setCursorPos(tile.pos.x, tile.pos.y);
             tile.render();
         }
         stdout.flush();

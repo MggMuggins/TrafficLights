@@ -3,6 +3,19 @@ module trafficlights;
 import renderer;
 import consoled;
 import std.stdio;
+import std.string;
+import std.format : formattedRead;
+
+enum LightState : byte
+{
+    GREEN = 0,
+    YELLOW = 1,
+    RED = 2
+}
+
+alias GREEN = LightState.GREEN;
+alias YELLOW = LightState.YELLOW;
+alias RED = LightState.RED;
 
 class TrafficLight : CTile
 {
@@ -16,25 +29,25 @@ class TrafficLight : CTile
         super(name, posX, posY);
     }
     
-    public void turnGreen()
+    public void setState(LightState state)
     {
-        this.bg = Color.green;
-    }
-    
-    public void turnYellow()
-    {
-        this.bg = Color.yellow;
-    }
-    
-    public void turnRed()
-    {
-        this.bg = Color.red;
+        final switch (state)
+        {
+            case GREEN:
+                this.bg = Color.green;
+                break;
+            case YELLOW:
+                this.bg = Color.yellow;
+                break;
+            case RED:
+                this.bg = Color.red;
+        }
     }
 }
 
 class Intersection
 {
-    private TrafficLight[] lights;
+    private TrafficLight[string] lights;
     private TileRenderer renderer;
     //private bool isGreen;
     
@@ -43,9 +56,36 @@ class Intersection
         this.renderer = new TileRenderer();
     }
     
+    public void lightsFromFile(string path)
+    {
+        string line, name;
+        int posX, posY;
+        File file;
+        try
+        {
+            file = new File(path, "r");
+        }
+        catch (std.exception.ErrnoException msg)
+        {
+            write("Invalid Filename");
+        }
+        while(!file.eof())
+        {
+            line = file.readln();
+            line = strip(line);
+            line.formattedRead("%s, %s, %s", &name, &posX, &posY);
+            this.addLight(new TrafficLight(name, posX, posY));
+        }
+    }
+    
     public void addLight(TrafficLight light)
     {
-        this.lights ~= light;
+        this.lights[light.name] = light;
+    }
+    
+    public void setLightState(string name, LightState state)
+    {
+        this.lights[name].setState(state);
     }
     
     //Don't really want to re-add all the tiles, just the ones that need to be rendered differently
@@ -56,6 +96,9 @@ class Intersection
         {
             this.renderer.registerTile(tile);
         }
+        //Uncomment for raw rendering
+        //this.renderer.rawUpdate();
+        //Uncomment for regular rendering
         this.renderer.update();
     }
 }
