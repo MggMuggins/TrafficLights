@@ -10,9 +10,12 @@ import std.format : formattedRead;
 
 enum LightState
 {
-    GREEN,
-    YELLOW,
-    RED
+    GREEN, YELLOW, RED
+}
+
+enum UpdateMode
+{
+    autoR, manR
 }
 
 alias GREEN = LightState.GREEN;
@@ -54,6 +57,7 @@ class Intersection
 {
     private TrafficLight[string] lights;
     private TileRenderer renderer;
+    private UpdateMode rendermode = UpdateMode.autoR;
     
     this()
     {
@@ -82,21 +86,32 @@ class Intersection
             this.addLight(new TrafficLight(name, posX, posY));
         }
         file.close();
+        if (this.rendermode == UpdateMode.autoR)
+            this.render();
     }
     
     public void addLight(TrafficLight light)
     {
         this.lights[light.getName()] = light;
+        if (this.rendermode == UpdateMode.autoR)
+            this.render();
     }
     
     public void setLightState(string name, LightState state)
     {
         this.lights[name].setState(state);
+        if (this.rendermode == UpdateMode.autoR)
+            this.render();
     }
     
     public void setRenderMode(RenderMode mode)
     {
         this.renderer.setRenderMode(mode);
+    }
+    
+    public void setUpdateMode(UpdateMode mode)
+    {
+        this.rendermode = mode;
     }
     
     //Don't really want to re-add all the tiles, just the ones that need to be rendered differently

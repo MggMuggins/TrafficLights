@@ -3,11 +3,16 @@ module renderer;
 import consoled;
 import std.stdio;
 import std.format;
+import core.thread;
 
 enum RenderMode
 {
-    raw,
-    fancy
+    raw, fancy
+}
+
+void delay(int seconds)
+{
+    Thread.sleep(dur!"seconds"(seconds));
 }
 
 class ScreenCoordinate

@@ -3,8 +3,6 @@ module main;
 import renderer;
 import trafficlights;
 
-import core.thread;
-
 int main(string[] args)
 {
     /* Render Testing Stuffs
@@ -20,9 +18,16 @@ int main(string[] args)
     //*
     auto direction = new Intersection();
     direction.lightsFromFile("/usr/local/share/mggmuggins/lights.txt");
-    direction.render();
-    Thread.sleep(dur!"seconds"(2));
-    direction.render();
+    direction.setLightState("North", GREEN);
+    direction.setLightState("South", RED);
+    delay(6);
+    direction.setLightState("North", YELLOW);
+    delay(2);
+    direction.setLightState("North", RED);
+    delay(1);
+    direction.setLightState("South", GREEN);
+    delay(6);
+    delay(2);
     //*/
     return 0;
 }
