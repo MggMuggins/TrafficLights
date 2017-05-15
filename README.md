@@ -5,6 +5,8 @@ Here is my experiment with object-oriented traffic light control and terminal re
 
 Now the project is becoming a terminal rendering engine with the help of [ConsoleD](https://github.com/robik/ConsoleD), and I'm using traffic lights as my pretense.
 
+Documentation for both parts of the project can be found on the [wiki](https://github.com/MggMuggins/TrafficLights/wiki).
+
 **This prject is highly experimental and may not work as expected. Do not expect a mature or useable api for a while. Mature releases will be posted in due time.**
 
 # Building/Contributing

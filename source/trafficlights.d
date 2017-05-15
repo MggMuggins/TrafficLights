@@ -49,6 +49,7 @@ class TrafficLight : CTile
                 break;
             case RED:
                 this.bg = Color.red;
+                break;
         }
     }
 }
@@ -64,7 +65,7 @@ class Intersection
         this.renderer = new TileRenderer();
     }
     
-    public void lightsFromFile(string path)
+    public void addFileLights(string path)
     {
         string line, name;
         int posX, posY;
@@ -75,8 +76,7 @@ class Intersection
         }
         else
         {
-            write("Invalid Filename");
-            return;
+            throw new Exception("Invalid Filename");
         }
         while(!file.eof())
         {

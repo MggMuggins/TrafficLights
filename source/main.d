@@ -50,10 +50,10 @@ int main(string[] args)
     //*/
     //*
     auto direction = new Intersection();
-    direction.lightsFromFile("/usr/local/share/mggmuggins/lights.txt");
+    direction.addFileLights("/usr/local/share/mggmuggins/lights.txt");
     direction.setLightState("North", RED);
     direction.setLightState("South", RED);
-    while(true)
+    for(int i = 0; i < 21; i++)
     {
         direction.setLightState("East", GREEN);
         direction.setLightState("West", GREEN);
@@ -74,5 +74,6 @@ int main(string[] args)
         direction.setLightState("South", RED);
         delay(2);
     }
+    return 0;
     //*/
 }
